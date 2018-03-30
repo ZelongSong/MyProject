@@ -14,6 +14,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Created by Administrator on 2018-03-29.
@@ -38,6 +40,48 @@ public class MasterDataSourceConfig {
     @Value("${master.datasource.driverClassName}")
     private String driverClass;
 
+    @Value("${spring.datasource.initialSize}")
+    private Integer initialSize;
+
+    @Value("${spring.datasource.minIdle}")
+    private Integer minIdle;
+
+    @Value("${spring.datasource.maxActive}")
+    private Integer maxActive;
+
+    @Value("${spring.datasource.maxWait}")
+    private Long maxWait;
+
+    @Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
+    private Integer timeBetweenEvictionRunsMillis;
+
+    @Value("${spring.datasource.minEvictableIdleTimeMillis}")
+    private Integer minEvictableIdleTimeMillis;
+
+    @Value("${spring.datasource.validationQuery}")
+    private String validationQuery;
+
+    @Value("${spring.datasource.testWhileIdle}")
+    private Boolean testWhileIdle;
+
+    @Value("${spring.datasource.testOnBorrow}")
+    private Boolean testOnBorrow;
+
+    @Value("${spring.datasource.testOnReturn}")
+    private Boolean testOnReturn;
+
+    @Value("${spring.datasource.poolPreparedStatements}")
+    private Boolean poolPreparedStatements;
+
+    @Value("${spring.datasource.maxPoolPreparedStatementPerConnectionSize}")
+    private Integer maxPoolPreparedStatementPerConnectionSize;
+
+    @Value("${spring.datasource.filters}")
+    private String filters;
+
+    @Value("${spring.datasource.connectionProperties}")
+    private Properties connectionProperties;
+
     @Bean(name = "masterDataSource")
     @Primary
     public DataSource masterDataSource() {
@@ -46,6 +90,24 @@ public class MasterDataSourceConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(user);
         dataSource.setPassword(password);
+        dataSource.setInitialSize ( initialSize );
+        dataSource.setMinIdle ( minIdle );
+        dataSource.setMaxActive ( maxActive );
+        dataSource.setMaxWait ( maxWait );
+        dataSource.setTimeBetweenEvictionRunsMillis ( timeBetweenEvictionRunsMillis );
+        dataSource.setMinEvictableIdleTimeMillis ( minEvictableIdleTimeMillis );
+        dataSource.setValidationQuery ( validationQuery );
+        dataSource.setTestWhileIdle ( testWhileIdle );
+        dataSource.setTestOnBorrow ( testOnBorrow );
+        dataSource.setTestOnReturn ( testOnReturn );
+        dataSource.setPoolPreparedStatements ( poolPreparedStatements );
+        dataSource.setMaxPoolPreparedStatementPerConnectionSize ( maxPoolPreparedStatementPerConnectionSize );
+        dataSource.setConnectProperties ( connectionProperties );
+        try {
+            dataSource.setFilters ( filters );
+        } catch (SQLException e) {
+            e.printStackTrace ();
+        }
         return dataSource;
     }
 

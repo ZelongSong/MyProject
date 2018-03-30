@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Properties;
 
 @Configuration
 // 扫描 Mapper 接口并容器管理
@@ -35,6 +35,48 @@ public class ClusterDataSourceConfig {
     @Value("${cluster.datasource.driverClassName}")
     private String driverClass;
 
+    @Value("${spring.datasource.initialSize}")
+    private Integer initialSize;
+
+    @Value("${spring.datasource.minIdle}")
+    private Integer minIdle;
+
+    @Value("${spring.datasource.maxActive}")
+    private Integer maxActive;
+
+    @Value("${spring.datasource.maxWait}")
+    private Long maxWait;
+
+    @Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
+    private Integer timeBetweenEvictionRunsMillis;
+
+    @Value("${spring.datasource.minEvictableIdleTimeMillis}")
+    private Integer minEvictableIdleTimeMillis;
+
+    @Value("${spring.datasource.validationQuery}")
+    private String validationQuery;
+
+    @Value("${spring.datasource.testWhileIdle}")
+    private Boolean testWhileIdle;
+
+    @Value("${spring.datasource.testOnBorrow}")
+    private Boolean testOnBorrow;
+
+    @Value("${spring.datasource.testOnReturn}")
+    private Boolean testOnReturn;
+
+    @Value("${spring.datasource.poolPreparedStatements}")
+    private Boolean poolPreparedStatements;
+
+    @Value("${spring.datasource.maxPoolPreparedStatementPerConnectionSize}")
+    private Integer maxPoolPreparedStatementPerConnectionSize;
+
+    @Value("${spring.datasource.filters}")
+    private String filters;
+
+    @Value("${spring.datasource.connectionProperties}")
+    private Properties connectionProperties;
+
     @Bean(name = "clusterDataSource")
     public DataSource clusterDataSource() {
         DruidDataSource dataSource = new DruidDataSource();
@@ -42,6 +84,24 @@ public class ClusterDataSourceConfig {
         dataSource.setUrl(url);
         dataSource.setUsername(user);
         dataSource.setPassword(password);
+        dataSource.setInitialSize ( initialSize );
+        dataSource.setMinIdle ( minIdle );
+        dataSource.setMaxActive ( maxActive );
+        dataSource.setMaxWait ( maxWait );
+        dataSource.setTimeBetweenEvictionRunsMillis ( timeBetweenEvictionRunsMillis );
+        dataSource.setMinEvictableIdleTimeMillis ( minEvictableIdleTimeMillis );
+        dataSource.setValidationQuery ( validationQuery );
+        dataSource.setTestWhileIdle ( testWhileIdle );
+        dataSource.setTestOnBorrow ( testOnBorrow );
+        dataSource.setTestOnReturn ( testOnReturn );
+        dataSource.setPoolPreparedStatements ( poolPreparedStatements );
+        dataSource.setMaxPoolPreparedStatementPerConnectionSize ( maxPoolPreparedStatementPerConnectionSize );
+        dataSource.setConnectProperties ( connectionProperties );
+        try {
+            dataSource.setFilters ( filters );
+        } catch (SQLException e) {
+            e.printStackTrace ();
+        }
         return dataSource;
     }
 
